@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import com.cinema.core.schedule.Schedule;
 import com.cinema.core.schedule.ScheduleRepository;
+import com.cinema.rds.domains.movie.QMovieEntity;
+import com.cinema.rds.domains.screen.QScreenEntity;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
@@ -15,6 +17,8 @@ public class ScheduleCoreRepository implements ScheduleRepository {
 	private final ScheduleJpaRepository scheduleJpaRepository;
 	private final JPAQueryFactory queryFactory;
 	private final QScheduleEntity schedule = QScheduleEntity.scheduleEntity;
+	private final QMovieEntity movie = QMovieEntity.movieEntity;
+	private final QScreenEntity screen = QScreenEntity.screenEntity;
 
 	public ScheduleCoreRepository(ScheduleJpaRepository scheduleJpaRepository, JPAQueryFactory queryFactory) {
 		this.scheduleJpaRepository = scheduleJpaRepository;
@@ -32,12 +36,12 @@ public class ScheduleCoreRepository implements ScheduleRepository {
 			.atStartOfDay();
 
 		List<ScheduleEntity> scheduleEntities = queryFactory.selectFrom(schedule)
-			.join(schedule.movie)
+			.join(schedule.movie, movie)
 			.fetchJoin()
-			.join(schedule.screen)
+			.join(schedule.screen, screen)
 			.fetchJoin()
 			.where(schedule.startAt.goe(currentDate))
-			.orderBy(schedule.movie.releasedAt.desc(), schedule.startAt.asc())
+			.orderBy(movie.releasedAt.desc(), schedule.startAt.asc())
 			.fetch();
 
 		return scheduleEntities.stream()

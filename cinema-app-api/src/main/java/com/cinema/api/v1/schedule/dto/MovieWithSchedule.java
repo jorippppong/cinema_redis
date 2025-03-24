@@ -57,6 +57,8 @@ public record MovieWithSchedule(
 					screenDetails
 				);
 			})
+			.sorted(Comparator.comparing(MovieWithSchedule::releasedAt)
+				.reversed())
 			.toList();
 	}
 
