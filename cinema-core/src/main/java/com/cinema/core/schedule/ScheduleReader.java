@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
+import com.cinema.core.movie.Genre;
+
 @Component
 public class ScheduleReader {
 	private final ScheduleRepository scheduleRepository;
@@ -12,7 +14,7 @@ public class ScheduleReader {
 		this.scheduleRepository = scheduleRepository;
 	}
 
-	public List<Schedule> getSchedule() {
-		return scheduleRepository.getSchedule();
+	public List<Schedule> getSchedule(String title, Genre genre) {
+		return scheduleRepository.getSchedule(title, genre);
 	}
 }

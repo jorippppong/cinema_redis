@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.cinema.core.movie.Genre;
+
 @Service
 public class ScheduleService {
 	private final ScheduleReader scheduleReader;
@@ -13,7 +15,7 @@ public class ScheduleService {
 	}
 
 	// 상영중인 영화 조회
-	public List<Schedule> getOngoingSchedule() {
-		return scheduleReader.getSchedule();
+	public List<Schedule> getOngoingSchedule(String title, Genre genre) {
+		return scheduleReader.getSchedule(title, genre);
 	}
 }

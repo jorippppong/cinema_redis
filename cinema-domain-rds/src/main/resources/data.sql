@@ -1,3 +1,8 @@
+CREATE INDEX idx_schedule_startAt ON schedule(start_at);
+CREATE INDEX idx_movie_releasedAt ON movie(released_at);
+CREATE INDEX idx_movie_title ON movie(title);   -- equal, %가 접미사에만 존재
+CREATE FULLTEXT INDEX idx_movie_title_fulltext ON movie(title); -- %_%
+
 INSERT INTO user_account(name, created_at, updated_at, created_by, updated_by)
 VALUES ('Flint', '2025-01-01', '2025-01-01', 1, 1),
        ('Melita', '2025-01-01', '2025-01-01', 1, 1),

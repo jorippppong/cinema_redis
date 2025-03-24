@@ -1,6 +1,7 @@
 import http from 'k6/http';
 import {check, sleep} from 'k6';
 
+const BASE_URL = "http://localhost:8080";
 // 가상 사용자 수 (피크 시간대)
 const VUSER_COUNT = 833; // 활성 유저 수 (피크 시간대 기준)
 
@@ -25,7 +26,16 @@ export let options = {
 export default function () {
     // 요청을 반복 수행 (각 유저는 3번 요청)
     for (let i = 0; i < REQUESTS_PER_USER; i++) {
-        let res = http.get('http://localhost:8080/v1/schedule');  // 테스트할 API 엔드포인트로 변경
+        const useSearchParam = Math.random() < 0.5; // 50% 확률
+        let url = `${BASE_URL}/v1/schedule`;
+
+        if (useSearchParam) {
+            const genres = ["ACTION", "COMEDY", "DRAMA", "HORROR", "ROMANCE"];
+            const randomGenre = genres[Math.floor(Math.random() * genres.length)];
+            url += `?title=${randomGenre}&genre=${randomGenre}`;
+        }
+
+        let res = http.get(url);  // 테스트할 API 엔드포인트로 변경
         check(res, {
             'is status 200': (r) => r.status === 200, // 성공적인 응답인지 확인
         });

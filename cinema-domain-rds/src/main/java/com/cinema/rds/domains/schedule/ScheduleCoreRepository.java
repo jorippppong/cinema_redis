@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.cinema.core.movie.Genre;
 import com.cinema.core.schedule.Schedule;
 import com.cinema.core.schedule.ScheduleRepository;
 import com.cinema.rds.domains.movie.QMovieEntity;
 import com.cinema.rds.domains.screen.QScreenEntity;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
@@ -26,12 +28,12 @@ public class ScheduleCoreRepository implements ScheduleRepository {
 	}
 
 	/**
-	 * 가장 최근 개봉한 영화들이 맨 위에 올라간다.
+	 * 가장 최근 개봉한 영화 순으로 정렬한다.
 	 * 시간 시간이 빠른 것부터 정렬된다.
 	 * @return
 	 */
 	@Override
-	public List<Schedule> getSchedule() {
+	public List<Schedule> getSchedule(String title, Genre genre) {
 		LocalDateTime currentDate = LocalDate.now()
 			.atStartOfDay();
 
@@ -40,7 +42,7 @@ public class ScheduleCoreRepository implements ScheduleRepository {
 			.fetchJoin()
 			.join(schedule.screen, screen)
 			.fetchJoin()
-			.where(schedule.startAt.goe(currentDate))
+			.where(schedule.startAt.goe(currentDate), titleContains(title), genreEq(genre))
 			.orderBy(movie.releasedAt.desc(), schedule.startAt.asc())
 			.fetch();
 
@@ -48,4 +50,17 @@ public class ScheduleCoreRepository implements ScheduleRepository {
 			.map(ScheduleEntity::toSchedule)
 			.toList();
 	}
+
+	private BooleanExpression titleContains(String title) {
+		return (title == null || title.isBlank()) ? null : movie.title.contains(title);
+	}
+
+	private BooleanExpression titleEq(String title) {
+		return (title == null || title.isBlank()) ? null : movie.title.eq(title);
+	}
+
+	private BooleanExpression genreEq(Genre genre) {
+		return genre == null ? null : movie.genre.eq(genre);
+	}
+
 }
