@@ -1,4 +1,7 @@
 dependencies {
     implementation 'org.springframework:spring-context'
     implementation 'org.springframework:spring-tx'
+
+    testRuntimeOnly 'com.h2database:h2'
+    testImplementation project(":cinema-domain-rds")
 }

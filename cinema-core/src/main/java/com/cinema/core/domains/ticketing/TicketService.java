@@ -7,7 +7,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.cinema.core.domains.schedule.Schedule;
 import com.cinema.core.domains.schedule.ScheduleService;
 import com.cinema.core.domains.screen.SeatRepository;
 import com.cinema.core.domains.user.UserService;
@@ -21,21 +23,25 @@ public class TicketService {
 	private final ScheduleService scheduleService;
 	private final TicketRepository ticketRepository;
 	private final SeatRepository seatRepository;
+	private final ReservationRepository reservationRepository;
 
 	public TicketService(UserService userService, ScheduleService scheduleService, TicketRepository ticketRepository,
-		SeatRepository seatRepository) {
+		SeatRepository seatRepository, ReservationRepository reservationRepository) {
 		this.userService = userService;
 		this.scheduleService = scheduleService;
 		this.ticketRepository = ticketRepository;
 		this.seatRepository = seatRepository;
+		this.reservationRepository = reservationRepository;
 	}
 
+	@Transactional
 	public void createTicketing(CreateTicketingCommand command) {
+
 		// 존재하는 유저인지
 		userService.findById(command.userId());
 
 		// 존재하는 스케줄인지
-		scheduleService.findById(command.scheduleId());
+		Schedule schedule = scheduleService.findById(command.scheduleId());
 
 		// 연속한 좌석인지 확인
 		validateSequenceSeat(command.seats());
@@ -44,19 +50,21 @@ public class TicketService {
 		validateSeatExist(command.seats());
 
 		// 요청한 자리 + 이미 예약한 자리 = 5개 넘는지 체크
-		int existTicketSeat = ticketRepository.findByScheduleIdAndUserId(command.scheduleId(), command.userId())
-			.map(ticket -> ticket.seats()
-				.size())
-			.orElse(0);
-		validateMaxSeatSize(existTicketSeat + command.seats()
+		int existReservation = reservationRepository.countByScheduleIdAndUserId(command.scheduleId(),
+			command.userId());
+		validateMaxSeatSize(existReservation + command.seats()
 			.size());
 
 		// 예약 가능한 좌석인지
-		validateSeatBookable(command.scheduleId(), command.seats());
+		Set<Seat> seats = getByScreenIdAndSeatNumber(schedule.screenId(), command.seats());
+		List<Long> seatIds = seats.stream()
+			.map(Seat::seatId)
+			.toList();
+		validateSeatBookable(command.scheduleId(), seatIds);
 
-		// ticketing 생성
-		Set<Seat> seats = getByScreenIdAndSeatNumber(command.screenId(), command.seats());
-		ticketRepository.save(command.userId(), command.scheduleId(), seats);
+		// 예약 및 ticket 생성
+		reservationRepository.reserve(command.userId(), command.scheduleId(), seatIds);
+		//ticketRepository.save(command.userId(), command.scheduleId(), seats);
 	}
 
 	private void validateMaxSeatSize(int totalSeat) {
@@ -93,10 +101,11 @@ public class TicketService {
 		}
 	}
 
-	private void validateSeatBookable(Long scheduleId, Set<String> seats) {
-		Set<String> bookedSeats = ticketRepository.findBookedSeatsByScheduledId(scheduleId);
-		for (String seat : seats) {
-			if (bookedSeats.contains(seat)) {
+	private void validateSeatBookable(Long scheduleId, List<Long> seatIds) {
+		List<Reservation> reservations = reservationRepository.getByScheduleIdAndSeatIds(scheduleId,
+			seatIds);
+		for (Reservation reservation : reservations) {
+			if (reservation.isReserved()) {
 				throw new CoreException(SEAT_ALREADY_BOOKED);
 			}
 		}
@@ -105,4 +114,5 @@ public class TicketService {
 	private Set<Seat> getByScreenIdAndSeatNumber(Long screenId, Set<String> seatNumbers) {
 		return seatRepository.getByScreenIdAndSeatNumbers(screenId, seatNumbers);
 	}
+
 }
