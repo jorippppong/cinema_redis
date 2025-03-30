@@ -3,12 +3,13 @@ package com.cinema.rds.domains.schedule;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.cinema.core.movie.Genre;
-import com.cinema.core.schedule.Schedule;
-import com.cinema.core.schedule.ScheduleRepository;
+import com.cinema.core.domains.movie.Genre;
+import com.cinema.core.domains.schedule.Schedule;
+import com.cinema.core.domains.schedule.ScheduleRepository;
 import com.cinema.rds.domains.movie.QMovieEntity;
 import com.cinema.rds.domains.screen.QScreenEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -49,6 +50,12 @@ public class ScheduleCoreRepository implements ScheduleRepository {
 		return scheduleEntities.stream()
 			.map(ScheduleEntity::toSchedule)
 			.toList();
+	}
+
+	@Override
+	public Optional<Schedule> findById(Long id) {
+		return scheduleJpaRepository.findById(id)
+			.map(ScheduleEntity::toSchedule);
 	}
 
 	private BooleanExpression titleContains(String title) {

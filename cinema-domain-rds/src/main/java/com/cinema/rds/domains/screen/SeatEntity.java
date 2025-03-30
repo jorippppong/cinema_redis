@@ -1,5 +1,6 @@
 package com.cinema.rds.domains.screen;
 
+import com.cinema.core.domains.ticketing.Seat;
 import com.cinema.rds.domains.common.BaseEntity;
 
 import jakarta.persistence.ConstraintMode;
@@ -25,4 +26,20 @@ public class SeatEntity extends BaseEntity {
 	private ScreenEntity screen;
 
 	private String seatNumber;
+
+	public Long getId() {
+		return id;
+	}
+
+	public ScreenEntity getScreen() {
+		return screen;
+	}
+
+	public String getSeatNumber() {
+		return seatNumber;
+	}
+
+	public Seat toSeat() {
+		return new Seat(id, seatNumber);
+	}
 }

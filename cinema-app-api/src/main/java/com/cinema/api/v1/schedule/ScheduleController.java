@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cinema.api.v1.schedule.dto.MovieWithSchedule;
-import com.cinema.core.movie.Genre;
-import com.cinema.core.schedule.Schedule;
-import com.cinema.core.schedule.ScheduleService;
+import com.cinema.core.domains.movie.Genre;
+import com.cinema.core.domains.schedule.Schedule;
+import com.cinema.core.domains.schedule.ScheduleService;
 
 @RestController
 @RequestMapping("/v1/schedule")
