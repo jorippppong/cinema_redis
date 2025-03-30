@@ -1,0 +1,21 @@
+services:
+  mysql:
+    image: mysql:8.0.35
+    container_name: cinema-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abcd1234
+      MYSQL_DATABASE: cinema
+      TZ: Asia/Seoul
+    ports:
+      - "3308:3306"
+    volumes:
+      - ./mysql_data:/var/lib/mysql
+    networks:
+      - cinema-network
+
+volumes:
+  mysql_data:
+
+networks:
+  cinema-network:
+    driver: bridge

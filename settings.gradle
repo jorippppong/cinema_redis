@@ -1,0 +1,5 @@
+rootProject.name = 'cinema'
+
+include 'cinema-core'
+include 'cinema-domain-rds'
+include 'cinema-app-api'

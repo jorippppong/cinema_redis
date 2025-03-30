@@ -1,0 +1,3 @@
+### GET schedule
+GET http://localhost:8080/v1/schedule?title=ACTION&genre=ACTION
+Content-Type: application/json
