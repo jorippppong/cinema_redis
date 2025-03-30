@@ -24,14 +24,15 @@ class TicketServiceTest {
 	@Sql(scripts = "/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 	void concurrentTest() throws InterruptedException {
 		// given
-		int threadCount = 50;
+		int threadCount = 100;
 		ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
 		CountDownLatch latch = new CountDownLatch(threadCount);
 
 		Long scheduleId = 1L;
 		Set<String> seats = Set.of("A1", "A2", "A3");
 		List<Long> userIds = List.of(
-			1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L
+			1L, 2L, 3L, 4L, 5L,
+			6L, 7L, 8L, 9L, 10L
 		);
 		AtomicInteger count = new AtomicInteger(0);
 

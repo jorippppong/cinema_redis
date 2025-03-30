@@ -1,6 +1,7 @@
 package com.cinema.rds.domains.ticketing;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -19,6 +20,10 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationEntit
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("select r from ReservationEntity r where r.schedule.id = :scheduleId and r.seat.id in :seatIds")
+	List<Reservation> getByScheduleIdAndSeatIdLock(@Param("scheduleId") Long scheduleId,
+		@Param("seatIds") List<Long> seatIds);
+
+	@Query("select r from ReservationEntity r where r.schedule.id = :scheduleId and r.seat.id in :seatIds")
 	List<Reservation> getByScheduleIdAndSeatId(@Param("scheduleId") Long scheduleId,
 		@Param("seatIds") List<Long> seatIds);
 
@@ -28,4 +33,13 @@ public interface ReservationJpaRepository extends JpaRepository<ReservationEntit
 	void updateReservation(@Param("userId") Long userId,
 		@Param("scheduleId") Long scheduleId,
 		@Param("seatIds") List<Long> seatIds);
+
+	@Modifying(clearAutomatically = true, flushAutomatically = true)
+	@Query("update ReservationEntity r set r.user.id = :userId, r.isReserved = true, r.version = r.version + 1 " +
+		"where r.schedule.id = :scheduleId and r.seat.id in :seatIds")
+	void updateReservationWithVersion(@Param("userId") Long userId,
+		@Param("scheduleId") Long scheduleId,
+		@Param("seatIds") List<Long> seatIds);
+
+	Optional<ReservationEntity> findByScheduleIdAndSeatId(Long scheduleId, Long seatId);
 }

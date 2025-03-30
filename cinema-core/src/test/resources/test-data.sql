@@ -1,3 +1,13 @@
+TRUNCATE TABLE user_account;
+TRUNCATE TABLE schedule;
+TRUNCATE TABLE movie;
+TRUNCATE TABLE theater;
+TRUNCATE TABLE screen;
+TRUNCATE TABLE seat;
+TRUNCATE TABLE reservation;
+
+
+
 INSERT INTO user_account(name, created_at, updated_at, created_by, updated_by)
 VALUES ('Flint', '2025-01-01', '2025-01-01', 1, 1),
        ('Melita', '2025-01-01', '2025-01-01', 1, 1),
@@ -22,7 +32,6 @@ VALUES ('A영화관', '2025-01-01', '2025-01-01', 1, 1);
 
 INSERT INTO screen (name, theater_id, created_at, updated_at, created_by, updated_by)
 VALUES ('1관', 1, '2025-01-01', '2025-01-01', 1, 1);
-
 
 INSERT INTO seat (created_at, created_by, screen_id, updated_at, updated_by, seat_number)
 VALUES ('2025-01-01 00:00:00', 1, 1, '2025-01-01 00:00:00', 1, 'A1'),
@@ -52,7 +61,7 @@ VALUES ('2025-01-01 00:00:00', 1, 1, '2025-01-01 00:00:00', 1, 'A1'),
        ('2025-01-01 00:00:00', 1, 1, '2025-01-01 00:00:00', 1, 'E5');
 
 ALTER TABLE reservation
-    MODIFY COLUMN user_id bigint;
+    MODIFY COLUMN version BIGINT DEFAULT 0;
 INSERT INTO reservation (created_at, created_by, updated_at, updated_by, is_reserved, schedule_id, seat_id, user_id)
 VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 2, null),
@@ -80,3 +89,32 @@ VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 24, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 25, null);
 
+-- ALTER TABLE reservation
+--        MODIFY COLUMN user_id bigint;
+-- INSERT INTO reservation (created_at, created_by, updated_at, updated_by, is_reserved, schedule_id, seat_id, user_id,
+--                          version)
+-- VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 2, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 3, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 4, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 5, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 6, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 7, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 8, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 9, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 10, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 11, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 12, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 13, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 14, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 15, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 16, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 17, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 18, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 19, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 20, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 21, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 22, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 23, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 24, null, 1),
+--        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 25, null, 1);

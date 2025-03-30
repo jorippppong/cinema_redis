@@ -16,6 +16,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 /**
  * 상영 시간표가 배정되면 해당 상영관에 있는 자리(총 25개)가 미리 등록됨
@@ -36,10 +37,13 @@ public class ReservationEntity extends BaseEntity {
 	private SeatEntity seat;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+	@JoinColumn(name = "user_id", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
 	private UserEntity user;
 
 	private Boolean isReserved;
+
+	@Version
+	private int version;
 
 	protected ReservationEntity() {
 
@@ -49,4 +53,7 @@ public class ReservationEntity extends BaseEntity {
 		return new Reservation(id, schedule.getId(), seat.getId(), isReserved);
 	}
 
+	public int getVersion() {
+		return version;
+	}
 }

@@ -104,7 +104,11 @@ public class TicketService {
 	private void validateSeatBookable(Long scheduleId, List<Long> seatIds) {
 		List<Reservation> reservations = reservationRepository.getByScheduleIdAndSeatIds(scheduleId,
 			seatIds);
+		//System.out.println("===================================================" + reservations.size());
 		for (Reservation reservation : reservations) {
+			// System.out.println("=========" + reservation.seatId()
+			// 	.toString() + " : " + reservation.isReserved()
+			// 	.toString());
 			if (reservation.isReserved()) {
 				throw new CoreException(SEAT_ALREADY_BOOKED);
 			}

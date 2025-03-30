@@ -22,12 +22,15 @@ public class ReservationCoreRepository implements ReservationRepository {
 
 	@Override
 	public void reserve(Long userId, Long scheduleId, List<Long> seatIds) {
-		reservationJpaRepository.updateReservation(userId, scheduleId, seatIds);
+		reservationJpaRepository.updateReservationWithVersion(userId, scheduleId, seatIds);
+		ReservationEntity reservation = reservationJpaRepository.findByScheduleIdAndSeatId(scheduleId,
+				seatIds.get(0))
+			.get();
+		System.out.println("[version] : " + reservation.getVersion());
 	}
 
 	@Override
 	public List<Reservation> getByScheduleIdAndSeatIds(Long scheduleId, List<Long> seatIds) {
-		//System.out.println("===========================================================5");
 		return reservationJpaRepository.getByScheduleIdAndSeatId(scheduleId, seatIds);
 	}
 }
