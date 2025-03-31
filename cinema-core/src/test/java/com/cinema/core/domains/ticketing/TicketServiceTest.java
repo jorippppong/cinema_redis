@@ -3,8 +3,10 @@ package com.cinema.core.domains.ticketing;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.util.List;
@@ -13,11 +15,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@TestPropertySource(locations = "classpath:application-test.yml")
 class TicketServiceTest {
     @Autowired
     TicketService ticketService;
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
 
     @Test
     @Sql(scripts = "/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -59,13 +62,5 @@ class TicketServiceTest {
         Assertions.assertThat(count.get())
                 .isEqualTo(1);
     }
-
-//    @AfterEach
-//    void truncateTables() {
-//        List<String> truncateAllTablesQuery = jdbcTemplate.queryForList("SELECT CONCAT('TRUNCATE TABLE ', TABLE_NAME, ';') AS q FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'cinema'", String.class);
-//        for (String truncateQuery : truncateAllTablesQuery) {
-//            jdbcTemplate.execute(truncateQuery);
-//        }
-//    }
 
 }

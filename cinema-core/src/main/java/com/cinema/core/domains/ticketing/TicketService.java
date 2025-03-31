@@ -1,20 +1,22 @@
 package com.cinema.core.domains.ticketing;
 
-import com.cinema.core.config.DistributedLock;
 import com.cinema.core.domains.schedule.Schedule;
 import com.cinema.core.domains.schedule.ScheduleService;
 import com.cinema.core.domains.screen.SeatRepository;
 import com.cinema.core.domains.user.UserService;
-import com.cinema.core.support.CoreErrorCode;
-import com.cinema.core.support.CoreException;
+import com.cinema.core.support.exception.CoreErrorCode;
+import com.cinema.core.support.exception.CoreException;
+import com.cinema.core.support.lock.DistributedLock;
+import com.cinema.core.support.lock.FunctionalDistributedLock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.cinema.core.support.CoreErrorCode.*;
+import static com.cinema.core.support.exception.CoreErrorCode.*;
 
 @Service
 public class TicketService {
@@ -24,14 +26,16 @@ public class TicketService {
     private final TicketRepository ticketRepository;
     private final SeatRepository seatRepository;
     private final ReservationRepository reservationRepository;
+    private final FunctionalDistributedLock functionalDistributedLock;
 
     public TicketService(UserService userService, ScheduleService scheduleService, TicketRepository ticketRepository,
-                         SeatRepository seatRepository, ReservationRepository reservationRepository) {
+                         SeatRepository seatRepository, ReservationRepository reservationRepository, FunctionalDistributedLock functionalDistributedLock) {
         this.userService = userService;
         this.scheduleService = scheduleService;
         this.ticketRepository = ticketRepository;
         this.seatRepository = seatRepository;
         this.reservationRepository = reservationRepository;
+        this.functionalDistributedLock = functionalDistributedLock;
     }
 
     @Transactional
@@ -61,11 +65,24 @@ public class TicketService {
                 .map(Seat::seatId)
                 .toList();
         String lockName = "lock:schedule:" + command.scheduleId().toString();
-        validateSeatBookable(command.scheduleId(), seatIds, lockName);
+        //validateSeatBookable(command.scheduleId(), seatIds, lockName);
 
         // 예약 및 ticket 생성
-        reservationRepository.reserve(command.userId(), command.scheduleId(), seatIds);
+        //reservationRepository.reserve(command.userId(), command.scheduleId(), seatIds);
         //ticketRepository.save(command.userId(), command.scheduleId(), seats);
+
+        // FIXME : 함수형 분산락 사용
+        try {
+            functionalDistributedLock.withLock(lockName, 10, 30, TimeUnit.SECONDS, () -> {
+                validateSeatBookable(command.scheduleId(), seatIds);
+                reservationRepository.reserve(command.userId(), command.scheduleId(), seatIds);
+                //ticketRepository.save(command.userId(), command.scheduleId(), seats);
+                return null;
+            });
+        } catch (Throwable throwable) {
+            throw new CoreException(SEAT_ALREADY_BOOKED);
+        }
+
     }
 
     private void validateMaxSeatSize(int totalSeat) {
@@ -104,6 +121,16 @@ public class TicketService {
 
     @DistributedLock(key = "#lockName")
     private void validateSeatBookable(Long scheduleId, List<Long> seatIds, String lockName) {
+        List<Reservation> reservations = reservationRepository.getByScheduleIdAndSeatIds(scheduleId,
+                seatIds);
+        for (Reservation reservation : reservations) {
+            if (reservation.isReserved()) {
+                throw new CoreException(SEAT_ALREADY_BOOKED);
+            }
+        }
+    }
+
+    private void validateSeatBookable(Long scheduleId, List<Long> seatIds) {
         List<Reservation> reservations = reservationRepository.getByScheduleIdAndSeatIds(scheduleId,
                 seatIds);
         for (Reservation reservation : reservations) {

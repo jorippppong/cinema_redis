@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:test
-    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:cinema-test;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;MODE=MySQL
+    driver-class-name: org.h2.Driver
     username: sa
     password:
   jpa:
@@ -9,7 +9,13 @@ spring:
       ddl-auto: create-drop
     database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
-#  data:
-#    redis:
-#      host: localhost
-#      port: 6379
+  data:
+    redis:
+      host: localhost
+      port: 6377
+  sql:
+    init:
+      mode: never
+  h2:
+    console:
+      enabled: true

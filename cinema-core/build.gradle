@@ -6,6 +6,5 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-aop'
 
     testRuntimeOnly 'com.h2database:h2'
-    testImplementation project(":cinema-domain-rds")
-    testImplementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    testRuntimeOnly project(":cinema-domain-rds")
 }

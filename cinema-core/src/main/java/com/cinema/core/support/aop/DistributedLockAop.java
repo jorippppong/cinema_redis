@@ -1,5 +1,6 @@
-package com.cinema.core.config;
+package com.cinema.core.support.aop;
 
+import com.cinema.core.support.lock.DistributedLock;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -30,7 +31,7 @@ public class DistributedLockAop {
         this.aopForTransaction = aopForTransaction;
     }
 
-    @Around("@annotation(com.cinema.core.config.DistributedLock)")
+    @Around("@annotation(com.cinema.core.support.lock.DistributedLock)")
     public Object lock(final ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

@@ -1,13 +1,3 @@
-TRUNCATE TABLE user_account;
-TRUNCATE TABLE schedule;
-TRUNCATE TABLE movie;
-TRUNCATE TABLE theater;
-TRUNCATE TABLE screen;
-TRUNCATE TABLE seat;
-TRUNCATE TABLE reservation;
-
-
-
 INSERT INTO user_account(name, created_at, updated_at, created_by, updated_by)
 VALUES ('Flint', '2025-01-01', '2025-01-01', 1, 1),
        ('Melita', '2025-01-01', '2025-01-01', 1, 1),
@@ -89,12 +79,6 @@ VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 24, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 25, null);
 
--- ALTER TABLE reservation
---        MODIFY COLUMN version BIGINT DEFAULT 0;
--- ALTER TABLE reservation
---        MODIFY COLUMN user_id bigint;
--- ALTER TABLE reservation
---        DROP COLUMN version;
 -- INSERT INTO reservation (created_at, created_by, updated_at, updated_by, is_reserved, schedule_id, seat_id, user_id,
 --                          version)
 -- VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null, 1),
