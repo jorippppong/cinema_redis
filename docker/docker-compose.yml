@@ -12,9 +12,19 @@ services:
       - ./mysql_data:/var/lib/mysql
     networks:
       - cinema-network
+  redis:
+    image: redis:7
+    container_name: cinema-redis
+    ports:
+      - "6377:6379"
+    volumes:
+      - ./redis_data:/data
+    networks:
+      - cinema-network
 
 volumes:
   mysql_data:
+  redis_data:
 
 networks:
   cinema-network:

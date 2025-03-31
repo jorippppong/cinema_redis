@@ -60,8 +60,8 @@ VALUES ('2025-01-01 00:00:00', 1, 1, '2025-01-01 00:00:00', 1, 'A1'),
        ('2025-01-01 00:00:00', 1, 1, '2025-01-01 00:00:00', 1, 'E4'),
        ('2025-01-01 00:00:00', 1, 1, '2025-01-01 00:00:00', 1, 'E5');
 
-ALTER TABLE reservation
-    MODIFY COLUMN version BIGINT DEFAULT 0;
+
+
 INSERT INTO reservation (created_at, created_by, updated_at, updated_by, is_reserved, schedule_id, seat_id, user_id)
 VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 2, null),
@@ -90,7 +90,11 @@ VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null),
        ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 25, null);
 
 -- ALTER TABLE reservation
+--        MODIFY COLUMN version BIGINT DEFAULT 0;
+-- ALTER TABLE reservation
 --        MODIFY COLUMN user_id bigint;
+-- ALTER TABLE reservation
+--        DROP COLUMN version;
 -- INSERT INTO reservation (created_at, created_by, updated_at, updated_by, is_reserved, schedule_id, seat_id, user_id,
 --                          version)
 -- VALUES ('2025-01-01 00:00:00', 1, '2025-01-01 00:00:00', 1, false, 1, 1, null, 1),
