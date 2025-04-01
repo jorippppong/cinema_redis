@@ -2,8 +2,8 @@ package com.cinema.rds.domains.movie;
 
 import java.time.LocalDateTime;
 
-import com.cinema.core.movie.Genre;
-import com.cinema.core.movie.Rating;
+import com.cinema.core.domains.movie.Genre;
+import com.cinema.core.domains.movie.Rating;
 import com.cinema.rds.domains.common.BaseEntity;
 
 import jakarta.persistence.Entity;

@@ -1,4 +1,4 @@
-package com.cinema.core.movie;
+package com.cinema.core.domains.movie;
 
 public enum Rating {
 	ALL("전체 관람가"),

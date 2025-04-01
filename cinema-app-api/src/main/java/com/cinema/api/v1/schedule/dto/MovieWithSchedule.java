@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.cinema.core.schedule.Schedule;
+import com.cinema.core.domains.schedule.Schedule;
 
 public record MovieWithSchedule(
 	Long movieId,
@@ -57,6 +57,8 @@ public record MovieWithSchedule(
 					screenDetails
 				);
 			})
+			.sorted(Comparator.comparing(MovieWithSchedule::releasedAt)
+				.reversed())
 			.toList();
 	}
 

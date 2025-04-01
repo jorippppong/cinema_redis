@@ -1,9 +1,9 @@
-package com.cinema.core.schedule;
+package com.cinema.core.domains.schedule;
 
 import java.time.LocalDateTime;
 
-import com.cinema.core.movie.Genre;
-import com.cinema.core.movie.Rating;
+import com.cinema.core.domains.movie.Genre;
+import com.cinema.core.domains.movie.Rating;
 
 public record Schedule(
 	Long movieId,

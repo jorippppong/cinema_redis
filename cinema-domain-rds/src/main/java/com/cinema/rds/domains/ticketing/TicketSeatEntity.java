@@ -1,11 +1,7 @@
 package com.cinema.rds.domains.ticketing;
 
-import java.time.LocalDateTime;
-
 import com.cinema.rds.domains.common.BaseEntity;
-import com.cinema.rds.domains.schedule.ScheduleEntity;
 import com.cinema.rds.domains.screen.SeatEntity;
-import com.cinema.rds.domains.user.UserEntity;
 
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -19,23 +15,37 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "ticketing")
-public class TicketingEntity extends BaseEntity {
+@Table(name = "ticket_seat")
+public class TicketSeatEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private LocalDateTime reservedAt;
-
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "schedule_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-	private ScheduleEntity schedule;
+	@JoinColumn(name = "ticket_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+	private TicketEntity ticket;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "seat_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
 	private SeatEntity seat;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-	private UserEntity user;
+	protected TicketSeatEntity() {
+	}
+
+	public TicketSeatEntity(TicketEntity ticket, SeatEntity seat) {
+		this.ticket = ticket;
+		this.seat = seat;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public TicketEntity getTicket() {
+		return ticket;
+	}
+
+	public SeatEntity getSeat() {
+		return seat;
+	}
 }
