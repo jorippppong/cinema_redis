@@ -14,4 +14,12 @@ public class RateLimitScriptConfig {
         redisScript.setResultType(Long.class);
         return redisScript;
     }
+
+    @Bean(name = "reservationRateLimitScript")
+    public DefaultRedisScript<Long> reservationRateLimit() {
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setLocation(new ClassPathResource("scripts/rate-limit-reservation.lua"));
+        redisScript.setResultType(Long.class);
+        return redisScript;
+    }
 }

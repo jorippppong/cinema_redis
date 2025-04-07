@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface RateLimitStrategy {
-    boolean isAllowed(LimitRequest limitRequest, String url, String ip);
+    boolean isAllowed(RateLimit rateLimit, String url, String ip);
 
     boolean supports(RateLimitType type);
 }

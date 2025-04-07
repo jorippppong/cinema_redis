@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface LimitRequest {
+public @interface RateLimit {
 
     /**
      * 조회, 예약 등 제한 유형
@@ -33,7 +33,7 @@ public @interface LimitRequest {
     /**
      * 금지 시간
      */
-    int banTime();
+    int banTime() default 0;
 
     /**
      * 금지 시간 단위

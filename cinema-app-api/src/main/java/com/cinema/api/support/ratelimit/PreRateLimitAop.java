@@ -14,29 +14,26 @@ import java.util.List;
 
 @Aspect
 @Component
-public class LimitRequestAop {
+public class PreRateLimitAop {
     private final List<RateLimitStrategy> strategies;
     private final HttpServletRequest request;
 
-    public LimitRequestAop(List<RateLimitStrategy> strategyList, HttpServletRequest request) {
+    public PreRateLimitAop(List<RateLimitStrategy> strategyList, HttpServletRequest request) {
         this.strategies = strategyList;
         this.request = request;
     }
 
-    @Around("@annotation(com.cinema.api.support.ratelimit.LimitRequest)")
-    public Object handleRateLimit(ProceedingJoinPoint joinPoint) throws Throwable {
+    @Around("@annotation(com.cinema.api.support.ratelimit.RateLimit)")
+    public Object preHandleRateLimit(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        LimitRequest limitRequest = method.getAnnotation(LimitRequest.class);
+        RateLimit rateLimit = method.getAnnotation(RateLimit.class);
 
-        RateLimitType type = limitRequest.type();
-        RateLimitStrategy strategy = strategies.stream()
-                .filter(s -> s.supports(type))
-                .findFirst()
-                .orElseThrow(() -> new CoreException(CoreErrorCode.RATE_LIMIT_TYPE_NOT_FOUND));
+        RateLimitType type = rateLimit.type();
+        if (type != RateLimitType.SEARCH) return joinPoint.proceed();
+        RateLimitStrategy strategy = findStrategy(type);
 
-        boolean allowed = strategy.isAllowed(limitRequest, getRequestUrl(), getClientIp());
-
+        boolean allowed = strategy.isAllowed(rateLimit, getRequestUrl(), getClientIp());
         if (!allowed) {
             throw new CoreException(CoreErrorCode.TOO_MANY_REQUEST);
         }
@@ -49,5 +46,12 @@ public class LimitRequestAop {
 
     private String getRequestUrl() {
         return request.getRequestURI();
+    }
+
+    private RateLimitStrategy findStrategy(RateLimitType type) {
+        return strategies.stream()
+                .filter(s -> s.supports(type))
+                .findFirst()
+                .orElseThrow(() -> new CoreException(CoreErrorCode.RATE_LIMIT_TYPE_NOT_FOUND));
     }
 }

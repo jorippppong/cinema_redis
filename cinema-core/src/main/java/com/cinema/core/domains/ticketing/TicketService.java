@@ -65,9 +65,10 @@ public class TicketService {
                 .map(Seat::seatId)
                 .toList();
         String lockName = "lock:schedule:" + command.scheduleId().toString();
+        // FIXME : AOP 분산락
         //validateSeatBookable(command.scheduleId(), seatIds, lockName);
 
-        // 예약 및 ticket 생성
+        // FIXME : 예약 및 ticket 생성 (낙관락, 비관락, AOP 분산락)
         //reservationRepository.reserve(command.userId(), command.scheduleId(), seatIds);
         //ticketRepository.save(command.userId(), command.scheduleId(), seats);
 

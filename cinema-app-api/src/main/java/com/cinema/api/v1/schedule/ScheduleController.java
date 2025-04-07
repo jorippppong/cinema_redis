@@ -1,6 +1,6 @@
 package com.cinema.api.v1.schedule;
 
-import com.cinema.api.support.ratelimit.LimitRequest;
+import com.cinema.api.support.ratelimit.RateLimit;
 import com.cinema.api.support.ratelimit.RateLimitType;
 import com.cinema.api.v1.schedule.dto.MovieWithSchedule;
 import com.cinema.core.domains.movie.Genre;
@@ -24,7 +24,7 @@ public class ScheduleController {
         this.scheduleService = scheduleService;
     }
 
-    @LimitRequest(
+    @RateLimit(
             type = RateLimitType.SEARCH,
             limit = 50,
             ttl = 1,
