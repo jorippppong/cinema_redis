@@ -1,4 +1,4 @@
-package com.cinema.core.support.aop;
+package com.cinema.core.support.lock;
 
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;

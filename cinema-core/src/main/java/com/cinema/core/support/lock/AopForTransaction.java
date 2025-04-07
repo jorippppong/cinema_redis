@@ -1,4 +1,4 @@
-package com.cinema.core.support.aop;
+package com.cinema.core.support.lock;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;

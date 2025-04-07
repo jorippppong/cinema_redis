@@ -1,4 +1,4 @@
-package com.cinema.api.support;
+package com.cinema.api.support.exception;
 
 import com.cinema.core.support.exception.CoreErrorCode;
 import com.cinema.core.support.exception.CoreErrorStatus;
@@ -35,6 +35,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
             case FORBIDDEN -> HttpStatus.FORBIDDEN;
             case NOT_FOUND -> HttpStatus.NOT_FOUND;
             case CONFLICT -> HttpStatus.CONFLICT;
+            case TOO_MANY_REQUEST -> HttpStatus.TOO_MANY_REQUESTS;
         };
         log.error("[CoreException] cause: {}, message: {}", NestedExceptionUtils.getMostSpecificCause(e),
                 e.getMessage());
