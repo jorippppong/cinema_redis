@@ -14,11 +14,11 @@ import java.util.List;
 
 @Aspect
 @Component
-public class PreRateLimitAop {
+public class RateLimitAop {
     private final List<RateLimitStrategy> strategies;
     private final HttpServletRequest request;
 
-    public PreRateLimitAop(List<RateLimitStrategy> strategyList, HttpServletRequest request) {
+    public RateLimitAop(List<RateLimitStrategy> strategyList, HttpServletRequest request) {
         this.strategies = strategyList;
         this.request = request;
     }

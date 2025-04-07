@@ -34,7 +34,7 @@ public class SearchRateLimitStrategy implements RateLimitStrategy {
                 TimeUnit.SECONDS.convert(rateLimit.ttl(), rateLimit.ttlTimeUnit()),
                 TimeUnit.SECONDS.convert(rateLimit.banTime(), rateLimit.banTimeUnit())
         );
-        System.out.println(result);
+        // System.out.println(result);
 
         return result != null && result != -1;
     }

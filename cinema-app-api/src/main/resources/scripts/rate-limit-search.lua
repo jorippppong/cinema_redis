@@ -9,16 +9,16 @@ if redis.call('EXISTS', ban_key) == 1 then
     return -1
 end
 
--- 현재 카운트 가져오기
-local current = tonumber(redis.call('GET', key) or '0')
+local current = redis.call('INCR', key)
+
+if current == 1 then
+    redis.call('EXPIRE', key, expire_time)
+end
 
 if current > limit then
-    -- 초과 요청: 차단 등록
     redis.call('SETEX', ban_key, ban_duration, '1')
     return -1
-else
-    -- 요청 허용: count 증가 & expire 설정
-    redis.call('INCRBY', key, 1)
-    redis.call('EXPIRE', key, expire_time)
-    return current + 1
 end
+
+return current
+
