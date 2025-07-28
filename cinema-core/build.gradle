@@ -1,3 +1,10 @@
 dependencies {
     implementation 'org.springframework:spring-context'
+    implementation 'org.springframework:spring-tx'
+
+    implementation 'org.redisson:redisson-spring-data-34:3.45.1'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly project(":cinema-domain-rds")
 }

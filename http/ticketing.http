@@ -1,0 +1,15 @@
+###
+POST http://localhost:8080/v1/ticketing
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "scheduleId": 2,
+  "seats": [
+    "A1",
+    "A2",
+    "A3"
+  ]
+}
+
+

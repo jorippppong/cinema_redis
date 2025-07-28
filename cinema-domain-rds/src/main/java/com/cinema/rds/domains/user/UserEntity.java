@@ -1,5 +1,6 @@
 package com.cinema.rds.domains.user;
 
+import com.cinema.core.domains.user.User;
 import com.cinema.rds.domains.common.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -16,4 +17,8 @@ public class UserEntity extends BaseEntity {
 	private Long id;
 
 	private String name;
+
+	public User toUser() {
+		return new User(id, name);
+	}
 }

@@ -2,7 +2,7 @@ package com.cinema.rds.domains.schedule;
 
 import java.time.LocalDateTime;
 
-import com.cinema.core.schedule.Schedule;
+import com.cinema.core.domains.schedule.Schedule;
 import com.cinema.rds.domains.common.BaseEntity;
 import com.cinema.rds.domains.movie.MovieEntity;
 import com.cinema.rds.domains.screen.ScreenEntity;
@@ -43,4 +43,15 @@ public class ScheduleEntity extends BaseEntity {
 			movie.getRunningTime(), movie.getGenre(), screen.getId(), screen.getName(), startAt, endAt);
 	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public LocalDateTime getStartAt() {
+		return startAt;
+	}
+
+	public LocalDateTime getEndAt() {
+		return endAt;
+	}
 }

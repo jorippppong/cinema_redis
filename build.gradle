@@ -1,53 +1,112 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.4.3'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
 }
 
 group = 'com.cinema'
 version = '1.0.0'
 
 allprojects {
-	bootJar{
-		enabled = false
-	}
+    repositories {
+        mavenCentral()
+    }
 
-	jar{
-		enabled = true
-	}
+    bootJar {
+        enabled = false
+    }
+
+    jar {
+        enabled = true
+    }
 }
 
 subprojects {
-	apply plugin: 'java'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'jacoco'
 
-	java {
-		toolchain {
-			languageVersion = JavaLanguageVersion.of(17)
-		}
-	}
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
 
-	repositories {
-		mavenCentral()
-	}
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
 
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter'
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	}
+    test {
+        useJUnitPlatform()
+    }
 
-	test {
-		useJUnitPlatform()
-	}
+    bootJar {
+        enabled = false
+    }
 
-	bootJar{
-		enabled = false
-	}
-
-	jar{
-		enabled = true
-	}
+    jar {
+        enabled = true
+    }
 }
 
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+// 커버리지 결과를 리포트로 생성하는 작업
+tasks.register('jacocoRootTestReport', JacocoReport) {
+    dependsOn subprojects.collect {
+        it.tasks.named('test')
+    }
+
+    // 서브프로젝트의 .exec 파일을 포함
+    executionData.from(fileTree(dir: '.', include: '**/build/jacoco/*.exec'))
+    executionData.from(fileTree(dir: '.', include: '**/**/build/jacoco/*.exec'))
+
+    reports {
+        xml.required = true
+        html.required = true
+        csv.required = false
+        html.outputLocation = file('build/jacocoTestReportHtml')
+        xml.outputLocation = file('build/reports/jacoco/test/jacocoTestReport.xml')
+    }
+
+    classDirectories.setFrom(files(subprojects.collect {
+        // 서브 프로젝트들의 컴파일된 클래스 파일이 저장되는 디렉토리
+        it.sourceSets.main.output
+    }))
+
+    finalizedBy 'jacocoTestVerification'
+}
+
+// 커버리지 측정을 위한 조건을 명시하는 task
+tasks.register('jacocoTestVerification') {
+    dependsOn 'jacocoRootTestReport' // 리포트 생성 후 실행
+
+    doLast {
+        // 커버리지 검증 로직 추가
+        def coverageRules = [
+                [
+                        enabled: true,
+                        element: 'CLASS',
+                        limits : [
+                                [counter: 'LINE', value: 'COVEREDRATIO', minimum: 0.0],
+                                [counter: 'METHOD', value: 'COVEREDRATIO', minimum: 0.0]
+                        ]
+                ]
+        ]
+    }
+}
+
+test.dependsOn 'jacocoRootTestReport'
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

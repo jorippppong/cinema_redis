@@ -3,13 +3,17 @@ dependencies {
     runtimeOnly project(":cinema-domain-rds")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.4.0'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
-bootJar{
+bootJar {
     enabled = true
 }
 
-jar{
+jar {
     enabled = false
 }
 
