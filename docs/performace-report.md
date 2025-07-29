@@ -1,7 +1,7 @@
 ```sql
 EXPLAIN
 SELECT *
-FROM schedule se
+FROM movieScheduleProjection se
          JOIN movie m ON se.movie_id = m.id
          JOIN screen s ON se.screen_id = s.id
 WHERE se.start_at >= CURRENT_DATE

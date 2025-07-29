@@ -1,4 +1,4 @@
-CREATE INDEX idx_schedule_startAt ON schedule(start_at);
+CREATE INDEX idx_schedule_startAt ON movieScheduleProjection(start_at);
 CREATE INDEX idx_movie_releasedAt ON movie(released_at);
 CREATE INDEX idx_movie_title ON movie(title);   -- equal, %가 접미사에만 존재
 CREATE FULLTEXT INDEX idx_movie_title_fulltext ON movie(title); -- %_%
@@ -153,7 +153,7 @@ CALL generate_seats();
 
 
 -- 상영 스케줄
-INSERT INTO schedule (movie_id, screen_id, start_at, end_at, created_at, created_by, updated_at, updated_by)
+INSERT INTO movieScheduleProjection (movie_id, screen_id, start_at, end_at, created_at, created_by, updated_at, updated_by)
 SELECT
     m.id AS movie_id,
     s.id AS screen_id,

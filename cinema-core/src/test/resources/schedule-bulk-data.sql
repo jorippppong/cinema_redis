@@ -63,9 +63,9 @@ FROM (
          SELECT seq FROM seq_gen
      ) AS temp;
 
--- schedule insert
+-- movieScheduleProjection insert
 -- 스케줄 테이블에 데이터를 삽입하는 쿼리
-INSERT INTO schedule (movie_id, screen_id, start_at, end_at, created_at, updated_at)
+INSERT INTO movieScheduleProjection (movie_id, screen_id, start_at, end_at, created_at, updated_at)
 WITH RECURSIVE DateSeries AS (
     -- 2025년 8월 1일부터 2025년 9월 30일까지의 날짜를 생성
     SELECT CAST('2025-08-01' AS DATE) AS schedule_date

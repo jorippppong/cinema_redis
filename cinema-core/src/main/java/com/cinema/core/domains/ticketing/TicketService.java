@@ -1,6 +1,6 @@
 package com.cinema.core.domains.ticketing;
 
-import com.cinema.core.domains.schedule.Schedule;
+import com.cinema.core.domains.schedule.MovieScheduleProjection;
 import com.cinema.core.domains.schedule.ScheduleService;
 import com.cinema.core.domains.screen.SeatRepository;
 import com.cinema.core.domains.user.UserService;
@@ -45,7 +45,7 @@ public class TicketService {
         userService.findById(command.userId());
 
         // 존재하는 스케줄인지
-        Schedule schedule = scheduleService.findById(command.scheduleId());
+        MovieScheduleProjection movieScheduleProjection = scheduleService.findById(command.scheduleId());
 
         // 연속한 좌석인지 확인
         validateSequenceSeat(command.seats());
@@ -60,7 +60,7 @@ public class TicketService {
                 .size());
 
         // 예약 가능한 좌석인지
-        Set<Seat> seats = getByScreenIdAndSeatNumber(schedule.screenId(), command.seats());
+        Set<Seat> seats = getByScreenIdAndSeatNumber(movieScheduleProjection.screenId(), command.seats());
         List<Long> seatIds = seats.stream()
                 .map(Seat::seatId)
                 .toList();

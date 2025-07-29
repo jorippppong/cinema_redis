@@ -16,11 +16,11 @@ public class ScheduleService {
     }
 
     // 상영중인 영화 조회
-    public List<Schedule> getOngoingSchedule(String title, Genre genre) {
+    public List<MovieScheduleProjection> getOngoingSchedule(String title, Genre genre) {
         return scheduleRepository.getSchedule(title, genre);
     }
 
-    public Schedule findById(Long id) {
+    public MovieScheduleProjection findById(Long id) {
         return scheduleRepository.findById(id)
                 .orElseThrow(() -> new CoreException(CoreErrorCode.SCHEDULE_NOT_FOUND));
     }

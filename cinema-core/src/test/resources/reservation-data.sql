@@ -10,7 +10,8 @@ VALUES ('Flint', '2025-01-01', '2025-01-01', 1, 1),
        ('Archibold', '2025-01-01', '2025-01-01', 1, 1),
        ('Faythe', '2025-01-01', '2025-01-01', 1, 1);
 
-INSERT INTO schedule (movie_id, screen_id, start_at, end_at, created_at, created_by, updated_at, updated_by)
+INSERT INTO movieScheduleProjection (movie_id, screen_id, start_at, end_at, created_at, created_by, updated_at,
+                                     updated_by)
 VALUES (1, 1, '2025-01-25 00:00:00', '2025-01-25 02:00:00', '2025-01-01', 1, '2025-01-01', 1);
 
 INSERT INTO movie (title, rating, released_at, poster_url, running_time, genre, created_at, updated_at, created_by,

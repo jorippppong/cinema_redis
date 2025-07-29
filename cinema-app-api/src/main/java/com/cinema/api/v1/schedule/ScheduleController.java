@@ -2,7 +2,7 @@ package com.cinema.api.v1.schedule;
 
 import com.cinema.api.v1.schedule.dto.MovieWithSchedule;
 import com.cinema.core.domains.movie.Genre;
-import com.cinema.core.domains.schedule.Schedule;
+import com.cinema.core.domains.schedule.MovieScheduleProjection;
 import com.cinema.core.domains.schedule.ScheduleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +35,7 @@ public class ScheduleController {
             @RequestParam(required = false) Genre genre
     ) {
         isParamsValid(title, genre);
-        List<Schedule> response = scheduleService.getOngoingSchedule(title, genre);
+        List<MovieScheduleProjection> response = scheduleService.getOngoingSchedule(title, genre);
         return ResponseEntity.ok(MovieWithSchedule.from(response));
     }
 

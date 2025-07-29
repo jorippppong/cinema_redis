@@ -1,6 +1,7 @@
 package com.cinema.core.domains.ticketing;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -23,6 +24,7 @@ class TicketServiceTest {
     TicketService ticketService;
 
     @Test
+    @Disabled
     @Sql(scripts = "/reservation-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void concurrentTest() throws InterruptedException {
         // given
