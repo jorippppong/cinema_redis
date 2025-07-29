@@ -7,6 +7,7 @@ import com.cinema.rds.domains.movie.QMovieEntity;
 import com.cinema.rds.domains.screen.QScreenEntity;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -34,6 +35,7 @@ public class ScheduleCoreRepository implements ScheduleRepository {
      * @return
      */
     @Override
+    @Timed
     public List<Schedule> getSchedule(String title, Genre genre) {
         LocalDateTime currentDate = LocalDate.of(2025, 1, 1) //LocalDate.now()
                 .atStartOfDay();
@@ -43,7 +45,7 @@ public class ScheduleCoreRepository implements ScheduleRepository {
                 .fetchJoin()
                 .join(schedule.screen, screen)
                 .fetchJoin()
-                .where(schedule.startAt.goe(currentDate), titleContains(title), genreEq(genre))
+                .where(schedule.startAt.goe(currentDate), titleStartsWith(title), genreEq(genre))
                 .orderBy(movie.releasedAt.desc(), schedule.startAt.asc())
                 .fetch();
 
@@ -58,8 +60,8 @@ public class ScheduleCoreRepository implements ScheduleRepository {
                 .map(ScheduleEntity::toSchedule);
     }
 
-    private BooleanExpression titleContains(String title) {
-        return (title == null || title.isBlank()) ? null : movie.title.contains(title);
+    private BooleanExpression titleStartsWith(String title) {
+        return (title == null || title.isBlank()) ? null : movie.title.startsWith(title);
     }
 
     private BooleanExpression titleEq(String title) {

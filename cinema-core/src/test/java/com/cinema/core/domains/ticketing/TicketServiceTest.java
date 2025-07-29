@@ -23,7 +23,7 @@ class TicketServiceTest {
     TicketService ticketService;
 
     @Test
-    @Sql(scripts = "/test-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    @Sql(scripts = "/reservation-data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void concurrentTest() throws InterruptedException {
         // given
         int threadCount = 100;
