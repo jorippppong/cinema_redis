@@ -1,12 +1,16 @@
 dependencies {
     implementation project(":cinema-core")
-    runtimeOnly project(":cinema-domain-rds")
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.4.0'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // poi
+    implementation 'org.apache.poi:poi:5.2.5'
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+    implementation 'org.apache.xmlbeans:xmlbeans:5.2.1' // POI 5.2.5와 호환되는 최신 버전
 }
 
 bootJar {
